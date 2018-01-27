@@ -5,7 +5,6 @@
 
 <jsp:include page="header.jsp"/>
 
-<!----------- COLLEGE --------------->
 <div class="block-area">
     <div class="row">
         <div class="col-xs-11 col-md-offset-3 col-md-6">
