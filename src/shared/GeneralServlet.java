@@ -8,12 +8,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GeneralServlet extends HttpServlet {
+    protected final int MAX_TIMEOUT_TIME = 10;
     protected GeneralScraper custom;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -41,6 +43,7 @@ public abstract class GeneralServlet extends HttpServlet {
         setHeaders();
         Parameters params = retrieveParameters();
         setParameters(params);
+
         includeHeader();
 
         analyze(params.classes);
@@ -58,7 +61,7 @@ public abstract class GeneralServlet extends HttpServlet {
     }
 
     protected void recordData(HttpServletRequest request, Parameters params) {
-        DatabaseConnection.writeToDatalog(request, custom.getElapsedTime(), params.suggestion, params.problems, params.classes);
+        DatabaseConnection.writeToDatalog(request, custom.getElapsedTime(), params.suggestion, params.problems, params.classes, custom.getNumPerm(), custom.timedOut);
     }
 
     protected void includeFooter() {
@@ -149,6 +152,8 @@ public abstract class GeneralServlet extends HttpServlet {
         custom.userOptions.setUnavTimesBitBlocks(params.unavTimesBitBlocks);
         custom.userOptions.setNumDaysPreference(params.numDaysOption);
         custom.userOptions.setShowOnlineClasses(params.onlineOption);
+        custom.serverPath = this.getServletContext().getRealPath(File.separator);
+
     }
 
     protected void initialize(HttpServletRequest request, HttpServletResponse response, GeneralScraper scraper, PrintWriter out) {

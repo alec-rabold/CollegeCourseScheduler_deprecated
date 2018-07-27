@@ -18,8 +18,6 @@ public class Database {
     /** Retrieves data for MySQL databases [non-production method] */
     protected static void refreshDB() {
         try {
-            DepartmentScraper scrape = new DepartmentScraper();
-
             Map<String, List<GeneralScraper.Course>> departments = new TreeMap<>();
 
             PrintWriter professors_DB = new PrintWriter(new File("professors_DB.txt"), "UTF-8");

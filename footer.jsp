@@ -4,39 +4,39 @@
     <div class="pull-left chat-list">
         <div class="listview narrow">
             <div class="media pull-right">
-                <img class="pull-left" src="../img/profile-pics/1.jpeg" width="30" alt="">
+                <img class="pull-left" src="../img/profile-pics/1.jpg" width="30" alt="">
                 <div class="media-body">
-                    <span class="t-overflow p-t-5">Cynthia Kohlleppel</span>
+                    <span class="t-overflow p-t-5">Dev_1</span>
                 </div>
             </div>
             <div class="media">
-                <img class="pull-left" src="../img/profile-pics/2.jpeg" width="30" alt="">
+                <img class="pull-left" src="../img/profile-pics/2.jpg" width="30" alt="">
                 <div class="media-body">
-                    <span class="t-overflow p-t-5">Cindy Kohlleppel</span>
+                    <span class="t-overflow p-t-5">Dev_2</span>
                 </div>
             </div>
             <div class="media">
-                <img class="pull-left" src="../img/profile-pics/3.jpeg" width="30" alt="">
+                <img class="pull-left" src="../img/profile-pics/3.jpg" width="30" alt="">
                 <div class="media-body">
-                    <span class="t-overflow p-t-5">Alec & Cindy</span>
+                    <span class="t-overflow p-t-5">Dev_3</span>
                 </div>
             </div>
             <div class="media">
-                <img class="pull-left" src="../img/profile-pics/4.jpeg" width="30" alt="">
+                <img class="pull-left" src="../img/profile-pics/4.jpg" width="30" alt="">
                 <div class="media-body">
-                    <span class="t-overflow p-t-5">Sawyer</span>
+                    <span class="t-overflow p-t-5">Dev_4</span>
                 </div>
             </div>
             <div class="media">
-                <img class="pull-left" src="../img/profile-pics/5.jpeg" width="30" alt="">
+                <img class="pull-left" src="../img/profile-pics/5.jpg" width="30" alt="">
                 <div class="media-body">
-                    <span class="t-overflow p-t-5">Wild puppy</span>
+                    <span class="t-overflow p-t-5">Dev_5</span>
                 </div>
             </div>
             <div class="media">
-                <img class="pull-left" src="../img/profile-pics/6.jpeg" width="30" alt="">
+                <img class="pull-left" src="../img/profile-pics/5.jpg" width="30" alt="">
                 <div class="media-body">
-                    <span class="t-overflow p-t-5">Give-a-dog-a-bone</span>
+                    <span class="t-overflow p-t-5">Dev_5</span>
                 </div>
             </div>
         </div>
@@ -50,32 +50,32 @@
         </div>
         <div class="chat-body">
             <div class="media pull-right">
-                <img class="pull-right" src="../img/profile-pics/3.jpeg" width="30" alt="" />
+                <img class="pull-right" src="../img/profile-pics/3.jpg" width="30" alt="" />
                 <div class="media-body">
                     Heyy<br/>
                     How are you doing ?
-                    <small>Me - 10 Mins ago</small>
+                    <small>Dev_3 - 10 Mins ago</small>
                 </div>
             </div>
             <div class="media pull-left">
-                <img class="pull-left" src="../img/profile-pics/1.jpeg" width="30" alt="" />
+                <img class="pull-left" src="../img/profile-pics/1.jpg" width="30" alt="" />
                 <div class="media-body">
                     I'm doing well :) <br/>How are you??
-                    <small>Cynthia - 9 Mins ago</small>
+                    <small>Dev_1 - 9 Mins ago</small>
                 </div>
             </div>
             <div class="media pull-right">
-                <img class="pull-right" src="../img/profile-pics/3.jpeg" width="30" alt="" />
+                <img class="pull-right" src="../img/profile-pics/3.jpg" width="30" alt="" />
                 <div class="media-body">
                     I'm doing great <br/>We should catch a movie soon
-                    <small>Me - 8 Mins ago</small>
+                    <small>Dev_3 - 8 Mins ago</small>
                 </div>
             </div>
             <div class="media pull-right">
-                <img class="pull-right" src="../img/profile-pics/3.jpeg" width="30" alt="" />
+                <img class="pull-right" src="../img/profile-pics/3.jpg" width="30" alt="" />
                 <div class="media-body">
                     Any ideas? Insidious?? ;)
-                    <small>Me - 8 Mins ago</small>
+                    <small>Dev_3 - 8 Mins ago</small>
                 </div>
             </div>
         </div>

@@ -9,13 +9,17 @@ public abstract class GeneralScraper {
     protected PrintWriter out;
 
     public String REGISTRATION_SEARCH_PAGE;
+    protected String serverPath;
 
     protected UserOptions userOptions = new UserOptions();
 
     protected Map<Integer, List<Course>> countIndexedCourses = new TreeMap<>();
     protected List<List<Course>> sizeSortedCourses = new ArrayList<>();
+    protected Set<String> foundAvailableCourses = new HashSet<>();
     protected List<String> chosenCourses = new ArrayList<>();
     protected int numChosenCourses = 0;
+
+    protected List<String> unfoundCourses = new ArrayList<>();
 
     protected URL Registration_URL;
     protected String parameters;
@@ -28,6 +32,8 @@ public abstract class GeneralScraper {
 
     protected long timeStart = System.currentTimeMillis();
     protected long timeEnd = 0L;
+
+    protected boolean timedOut = false;
 
     public class UserOptions {
         /** Professors */
@@ -99,12 +105,14 @@ public abstract class GeneralScraper {
         public  int timeTightness;
         public  int numDays;
         public  Integer algorithmValue;
-        public  Schedule(List<Course> courses, int numGoodProf, int numBadProf, int timeTightness, int numDays) {
+        public long[] layout;
+        public  Schedule(List<Course> courses, int numGoodProf, int numBadProf, int timeTightness, int numDays, long[] layout) {
             this.courses = courses;
             this.numGoodProfessors = numGoodProf;
             this.numBadProfessors = numBadProf;
             this.timeTightness = timeTightness;
             this.numDays = numDays;
+            this.layout = layout;
             this.algorithmValue = (userOptions.spreadPreference * 2 * timeTightness) - 45*numGoodProf + 55*numBadProf + (userOptions.numDaysPreference * (numDays * 30));
         }
         @Override
@@ -147,6 +155,9 @@ public abstract class GeneralScraper {
             // "Better" classes will bubble up with a limit of 25
             PriorityQueue<Schedule> validSchedules = new PriorityQueue<>();
 
+            if(sizeSortedCourses.isEmpty())
+                printTables(validSchedules, false);
+
             // Sort the course lists by size to allow for efficient dynamic programming techniques
             Collections.sort(sizeSortedCourses, new Comparator<List>(){
                 public int compare(List a1, List a2) {
@@ -169,6 +180,7 @@ public abstract class GeneralScraper {
             while (iterationVariables[0] < (countIndexedCourses.get(0).size())) {
                 if(Thread.interrupted()) {
                     printTables(validSchedules, true);
+                    this.timedOut = true;
                     return;
                 }
                 this.numPermutations++;
@@ -261,6 +273,24 @@ public abstract class GeneralScraper {
                 // "If current schedule is valid"
                 if (!schedulesCollide) {
                     boolean addToSchedule = true;
+                    boolean availableSessions = true;
+
+                    /** FOUND CLASSES (default preference)
+                     *  Over the whole analysis process, lets the user know which
+                     *  classes have no available non-waitlisted sessions
+                     *  during the selected term.
+                     */
+                    for (Course crs : temp) {
+                        int numSeatsAvailable = Integer.parseInt(crs.seats.substring(0, crs.seats.indexOf("/")));
+                        if (numSeatsAvailable <= 0) {
+                            /** Remove waitlisted classes option */
+                            if (!userOptions.showWaitlisted) {
+                                continue permutations;  // similar saying: addToSchedule = false;
+                            }
+                        }
+                        else foundAvailableCourses.add(crs.courseID);
+                    }
+
 
                     /** Check if conflicts with user's unavailable time(s) */
                     for (int i = 0; i < 5; i++) {
@@ -321,14 +351,6 @@ public abstract class GeneralScraper {
                                     }
                                 }
                             }
-                            /** Remove waitlisted classes */
-                            if (!userOptions.showWaitlisted) {
-                                int numSeatsAvailable = Integer.parseInt(crs.seats.substring(0, crs.seats.indexOf("/")));
-                                if (numSeatsAvailable <= 0) {
-                                    addToSchedule = false;
-                                    break breakLoop;
-                                }
-                            }
                             /** Remove hybrid/online classes */
                             if (!userOptions.showOnlineClasses) {
                                 for (String location : crs.locations) {
@@ -342,9 +364,35 @@ public abstract class GeneralScraper {
                     }
                     // Add if fits all preferences
                     if (addToSchedule) {
-                        Schedule sched = new Schedule(temp, numWanted, numUnwanted, scheduleDistance, numDays); //allows algorithm to update before adding to PQ
+                        long[] schedLayout = calculateScheduleLayout(temp);
+
+                        Schedule sched = new Schedule(temp, numWanted, numUnwanted, scheduleDistance, numDays, schedLayout); //allows algorithm to update before adding to PQ
                         validSchedules.add(sched);
                         this.numValidSchedules++;
+
+                        // NOTE: remember the PriorityQueue is in REVERSE order (LAST is BEST schedule)
+                        // Remove lower ranked schedules that have basically the same schedule layout but with different instructors
+                        // TODO: maybe make it an option to remove schedules with the same days/times (but different instructors)
+                        boolean alreadySeen = false;
+                        Schedule scheduleToDelete = null;
+                        Schedule[] schedulesArray = new Schedule[validSchedules.size()];
+                        for(int i = 0; i < schedulesArray.length; i++) {
+                            schedulesArray[i] = validSchedules.poll();
+                            if(Arrays.equals(schedulesArray[i].layout, schedLayout)) {
+                                // Check if already seen this layout before
+                                if(alreadySeen) {
+                                    scheduleToDelete = schedulesArray[i];
+                                }
+                                else alreadySeen = true;
+                            }
+                        }
+                        // add back into the PriorityQueue
+                        for(int i = 0; i < schedulesArray.length; i++) {
+                            // delete the lower-ranked scheduled if there is a duplicate layout
+                            if(schedulesArray[i] != scheduleToDelete)
+                                validSchedules.add(schedulesArray[i]);
+                        }
+
                         // Keep the number of schedules equal to 25 (or less)
                         if (validSchedules.size() > 25)
                             validSchedules.poll();
@@ -369,13 +417,52 @@ public abstract class GeneralScraper {
 
         /** Tables header */
         out.println("<div class='block-area'>");
-        out.println("<div class='row'>");
-        out.println("<div class='col-xs-12' style='text-align:center'>");
+        out.println("<div id='scheduleHeader' class='row'>");
+        // Classes with 0 non-waitlisted sections
+        Set<String> waitlistedClasses = getWaitlistedClasses();
+        out.println("<div class='col-xs-offset-1 col-xs-2'>");
+        out.println("<h4 class='fewClasses'>[Note] All sections waitlisted:</h4>");
+        if(!waitlistedClasses.isEmpty()) {
+            /*
+            out.println("<div class='accordion tile'><div class='panel-group block' id='fewClasses'><div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'>");
+            out.println("<a class='accordion-toggle active' data-toggle='collapse' data-parent='#scheduleHeader' href='#collapseLists'>Expand list</a></h3></div>");
+            out.println("<div id='collapseLists' class='panel-collapse collapse'><div class='panel-body'><article class='row block-area'><div class='col-xs-12'>");
+            */
+            out.println("<ul class='lists-fewClasses'>");
+            for (String className : waitlistedClasses)
+                out.println("<li>" + className + "</li>");
+            out.println("</ul>");
+            /*
+            out.println("</div></article></div></div></div></div></div>");
+            */
+        }
+        out.println("</div>");
+        // Table header
+        out.println("<div class='col-xs-6' style='text-align:center'>");
         out.println("<h2 class='numSched'>Schedule <span id='numSched' class='numSched' data-count='1'>" + Math.min(1, size) + "</span> of " + Math.min(25, size) + "</h2>");
         if(!wasInterrupted) out.println("<i>There are " + NumberFormat.getNumberInstance(Locale.US).format(this.numValidSchedules) + " valid permutations of your schedule - we filtered out " + NumberFormat.getNumberInstance(Locale.US).format((numPermutations - numValidSchedules)) + " that didn't work</i>");
         else out.println("<i>There were too many permutations for your schedule so we optimized the first " + NumberFormat.getNumberInstance(Locale.US).format(numPermutations) + "." +  "<br>We found " + NumberFormat.getNumberInstance(Locale.US).format(this.numValidSchedules) + " valid permutations of your schedule and filtered out " + NumberFormat.getNumberInstance(Locale.US).format((numPermutations - numValidSchedules)) + " that didn't work</i>");
         out.println("<br>");
         out.println("<i id='numValid' data-count='" + Math.min(25, size) + "'>Check out your top " + Math.min(25, size) + "!</i>");
+        out.println("</div>");
+        // Classes with 0 total sections (waitlisted or not)
+        Set<String> unavailableClasses = getUnavailableClasses();
+        out.println("<div class='col-xs-2'>");
+        out.println("<h4 class='fewClasses'>[Note] Not offered this term:</h4>");
+        if(!unavailableClasses.isEmpty()) {
+            /*
+            out.println("<div class='accordion tile'><div class='panel-group block' id='fewClasses'><div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'>");
+            out.println("<a class='accordion-toggle active' data-toggle='collapse' data-parent='#scheduleHeader' href='#collapseLists'>Expand list</a></h3></div>");
+            out.println("<div id='collapseLists' class='panel-collapse collapse'><div class='panel-body'><article class='row block-area'><div class='col-xs-12'>");
+            */
+            out.println("<ul class='lists-fewClasses'>");
+            for (String className : unavailableClasses)
+                out.println("<li>" + className + "</li>");
+            out.println("</ul>");
+            /*
+            out.println("</div></article></div></div></div></div></div>");
+            */
+        }
         out.println("</div>");
         out.println("</div>");
         out.println("<div id='myCarousel' class='carousel slide' data-ride='carousel' data-interval='false'>");
@@ -704,5 +791,55 @@ public abstract class GeneralScraper {
                 this.parameters = removeParam.delete(startIndex, endIndex).toString();
             }
         }
+    }
+
+    protected long getNumPerm() {
+        long numPerm = 1;
+        for(int i= 0; i < sizeSortedCourses.size(); i++) {
+            numPerm = numPerm * sizeSortedCourses.get(i).size();
+        }
+        return numPerm;
+    }
+    protected Set<String> getWaitlistedClasses() {
+        Set<String> waitlistedClasses = new TreeSet<>();
+
+        for(List<Course> courseList : sizeSortedCourses) {
+            // Each courseIdentifier in courseList is the same, so just get the first
+            String courseIdentifier = courseList.get(0).courseID;
+            if(!foundAvailableCourses.contains(courseIdentifier))
+                waitlistedClasses.add(courseIdentifier);
+        }
+        return waitlistedClasses;
+    }
+    protected Set<String> getUnavailableClasses() {
+        Set<String> unavailableClasses = new TreeSet<>();
+
+        nextCourse:
+        for(String courseName : chosenCourses) {
+            for(List<Course> courseList : sizeSortedCourses) {
+                // Each courseIdentifier in courseList is the same, so just get the first
+                String courseIdentifier = courseList.get(0).courseID;
+                if(courseIdentifier.contains(courseName))
+                    continue nextCourse;
+            }
+            unavailableClasses.add(courseName);
+        }
+        return unavailableClasses;
+    }
+
+    protected long[] calculateScheduleLayout(List<Course> courses) {
+        long[] scheduleLayout = new long[5];
+        for(int i = 0; i < courses.size(); i++) {
+            for (int multipleDaySlots = 0; multipleDaySlots < courses.get(i).days.size(); multipleDaySlots++) {
+                int[] daysArray = convDaysToArray(courses.get(i).days.get(multipleDaySlots));
+                for (int j = 0; j < daysArray.length; j++) {
+                    if (daysArray[j] == 1) {
+                        long bits = convertTimesToBits(courses.get(i).times.get(multipleDaySlots));
+                        scheduleLayout[j] = (bits | scheduleLayout[j]);
+                    }
+                }
+            }
+        }
+        return scheduleLayout;
     }
 }

@@ -8,7 +8,7 @@
 <!----------- FORM--------------->
 <form id="preferences-form" method="POST" action="${pageContext.request.contextPath}/${collegeName}">
     <div class="block-area">
-        <h2 class="form-h2" style="margin-bottom: 0px">Step 2: Enter your classes</h2>
+        <h2 class="form" style="margin-bottom: 0px">Step 2: Enter your classes</h2>
     </div>
     <!-- Term -->
     <div class="block-area">
@@ -17,8 +17,8 @@
             <div class="row">
                 <div class="col-xs-4 col-md-2">
                     <select name="season" class="form-control">
-                        <option>Fall</option>
-                        <option selected="selected">Winter</option>
+                        <option selected="selected">Fall</option>
+                        <option>Winter</option>
                         <option>Spring</option>
                         <option>Summer</option>
                     </select>
@@ -58,7 +58,7 @@
     <!-- /Needed classes -->
 
     <div class="block-area">
-        <h2  class="form-h2">Step 3: Enter your preferences</h2>
+        <h2  class="form">Step 3: Enter your preferences</h2>
         <!-- Unavailable -->
         <div id="appendage" data-count="1">
             <div id="timeConflicts">

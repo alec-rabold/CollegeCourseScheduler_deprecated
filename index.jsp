@@ -9,7 +9,7 @@
 <div class="block-area">
     <div class="row">
         <div class="col-xs-11 col-md-offset-3 col-md-6">
-            <h2 class="form-h2" style="text-align: center">Step 1: Select your school</h2>
+            <h2 class="form f-shadow" style="text-align: center">Step 1: Select your school</h2>
             <button class="banner btn btn-block btn-alt" onclick="location.href='/berkeley'" style="margin-top: 20px;">UC Berkeley</button>
             <button class="banner btn btn-block btn-alt" onclick="location.href='/UCSB'">UC Santa Barbara</button>
             <button class="banner btn btn-block btn-alt" onclick="location.href='/SDSU'">San Diego State University</button>
@@ -19,7 +19,7 @@
 
 <div class="block-area">
     <hr class="preview-rule">
-    <h2 class="form-h2" style="margin: 5px 0px 15px 0px; text-align: center;">Preview</h2>
+    <h2 class="form f-shadow" style="margin: 5px 0px 15px 0px; text-align: center;">Preview</h2>
     <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
             <div class="item active">

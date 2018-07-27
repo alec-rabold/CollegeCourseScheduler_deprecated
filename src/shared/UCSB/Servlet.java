@@ -32,8 +32,6 @@ public class Servlet extends GeneralServlet {
             e.printStackTrace();
         }
 
-        custom.analyzePermutations();
-        /*
         ExecutorService executor = Executors.newFixedThreadPool(4);
         Future<?> future = executor.submit(new Runnable() {
             @Override
@@ -46,7 +44,7 @@ public class Servlet extends GeneralServlet {
         executor.shutdown();
 
         try {
-            future.get(12, TimeUnit.SECONDS);
+            future.get(MAX_TIMEOUT_TIME, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             System.out.println("job was interrupted");
         } catch (ExecutionException e) {
@@ -65,6 +63,5 @@ public class Servlet extends GeneralServlet {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
     }
 }

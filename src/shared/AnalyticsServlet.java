@@ -133,6 +133,7 @@ public class AnalyticsServlet extends HttpServlet {
      */
     private static int[] getResponse(GetReportsResponse response) {
         int[] res = new int[3];
+        int[] oldData = {914, 1282, 4113};
 
         for (Report report: response.getReports()) {
             ColumnHeader header = report.getColumnHeader();
@@ -152,7 +153,7 @@ public class AnalyticsServlet extends HttpServlet {
                 for (int j = 0; j < metrics.size(); j++) {
                     DateRangeValues values = metrics.get(j);
                     for (int k = 0; k < values.getValues().size() && k < metricHeaders.size(); k++) {
-                        res[k] = Integer.parseInt(values.getValues().get(k));
+                        res[k] = Integer.parseInt(values.getValues().get(k)) + oldData[k];
                     }
                 }
             }

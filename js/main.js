@@ -9,6 +9,11 @@ $('input.days').val('0').prop('checked', false);
 
 $(document).ready(function() {
 
+    var $myGroup = $('#myGroup');
+    $myGroup.on('show.bs.collapse','.collapse', function() {
+        $myGroup.find('.collapse.in').collapse('hide');
+    });
+
     /** Deprecated */
     // search function
     /*

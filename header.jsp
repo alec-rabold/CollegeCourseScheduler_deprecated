@@ -47,7 +47,7 @@
     <body id="skin-blur-greenish">
         <header id="header" class="media">
             <a href="" id="menu-toggle"></a> 
-            <a class="logo pull-left" href="../">Alpha - Version 1.0</a>
+            <a class="logo pull-left f-shadow" href="../">Alpha - Version 1.0</a>
             <div class="media-body">
                 <div class="media" id="top-menu">
                     <div class="pull-left tm-icon">
@@ -77,7 +77,7 @@
                 </div>
             </div>
         </header>
-        
+
         <div class="clearfix"></div>
         <section id="main" class="p-relative" role="main">
             <!-- Sidebar -->
@@ -87,7 +87,7 @@
                     <!-- Profile Menu -->
                     <div class="text-center s-widget m-b-25 dropdown" id="profile-menu">
                         <a href="" data-toggle="dropdown">
-                            <img class="profile-pic animated" src="img/profile-pic.jpeg" alt="">
+                            <img class="profile-pic animated" src="img/profile-pic.jpg" alt="">
                         </a>
                         <ul class="dropdown-menu profile-menu">
                             <li><a href="../">My Profile</a> <i class="icon left">&#61903;</i><i class="icon right">&#61815;</i></li>
@@ -226,82 +226,82 @@
                         <div class="overflow" style="height: 254px">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/1.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/1.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cynthia Kohlleppel - 11:47pm on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_1 - 11:47pm on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">Finally able to hack (parse) UCSB's registration HTML - see our DevPost for more info on how we handled these challenges!</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/2.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/2.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cindy Kohlleppel - 09:13pm on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_2 - 09:13pm on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">UC Santa Barbara has a very unique and painfully minimalistic approach to their public registration system.. Sad reacts..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/3.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/3.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Alec & Cindy - 01:37pm on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_3 - 01:37pm on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">Leaps and bounds are made through hard work and persistence..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/4.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/4.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Sawyer - 10:10am on 01/20/2018</small><br>
-                                    <a class="t-overflow" href="../">Woof! Feeling good about our progress on the UI..</a>
+                                    <small class="text-muted">Dev_4 - 10:10am on 01/20/2018</small><br>
+                                    <a class="t-overflow" href="../">Yea! Feeling good about our progress on the UI..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/2.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/2.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cindy Kohlleppel - 02:29am on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_2 - 02:29am on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">We can now (almost) successfully optimize students' schedules for THREE universities!</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/3.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/3.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Alec & Cindy - 10:06pm on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_3 - 10:06pm on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">In for the long haul - made good progress and found a place to crash for the night! Hopefully our program doesn't do the same...!</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/1.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/1.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cynthia Kohlleppel - 07:52pm on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_1 - 07:52pm on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">Our 5 hour bus ride from San Diego has now turned into 11+ hours.. Better stock up on zzz's..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/5.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/5.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Sawyer - 02:22pm on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_5 - 02:22pm on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">Been on this bus for a while - excited to breathe some fresh air soon.. A salad would also be verrry nicee..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/6.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/5.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Sawyer - 08:47am on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_5 - 08:47am on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">Off we go! San Diego --> Santa Barbara</a>
                                 </div>
                             </div>
@@ -321,82 +321,82 @@
                         <div class="overflow" style="height: 254px">
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/1.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/1.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cynthia Kohlleppel - 11:47pm on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_1 - 11:47pm on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">Finally able to hack (parse) UCSB's registration HTML - see our DevPost for more info on how we handled these challenges!</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/2.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/2.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cindy Kohlleppel - 09:13pm on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_2 - 09:13pm on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">UC Santa Barbara has a very unique and painfully minimalistic approach to their public registration system.. Sad reacts..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/3.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/3.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Alec & Cindy - 01:37pm on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_3 - 01:37pm on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">Leaps and bounds are made through hard work and persistence..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/4.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/4.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Sawyer - 10:10am on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_4 - 10:10am on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">Woof! Feeling good about our progress on the UI..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/2.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/2.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cindy Kohlleppel - 02:29am on 01/20/2018</small><br>
+                                    <small class="text-muted">Dev_2 - 02:29am on 01/20/2018</small><br>
                                     <a class="t-overflow" href="../">We can now (almost) successfully optimize students' schedules for THREE universities!</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/3.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/3.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Alec & Cindy - 10:06pm on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_3 - 10:06pm on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">In for the long haul - made good progress and found a place to crash for the night! Hopefully our program doesn't do the same...!</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/1.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/1.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Cynthia Kohlleppel - 07:52pm on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_1 - 07:52pm on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">Our 5 hour bus ride from San Diego has now turned into 11+ hours.. Better stock up on zzz's..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/5.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/5.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Sawyer - 02:22pm on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_5 - 02:22pm on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">Been on this bus for a while - excited to breathe some fresh air soon.. A salad would also be verrry nicee..</a>
                                 </div>
                             </div>
                             <div class="media">
                                 <div class="pull-left">
-                                    <img width="40" src="img/profile-pics/6.jpeg" alt="">
+                                    <img width="40" src="img/profile-pics/5.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <small class="text-muted">Sawyer - 08:47am on 01/19/2018</small><br>
+                                    <small class="text-muted">Dev_5 - 08:47am on 01/19/2018</small><br>
                                     <a class="t-overflow" href="../">Off we go! San Diego --> Santa Barbara</a>
                                 </div>
                             </div>
@@ -414,7 +414,7 @@
                 </ol>
                 <h4 class="page-title">DASHBOARD</h4><!-- Collapse -->
                 <div class="block-area" id="collapse">
-                    <h1>Schedule Optimizer v1.0</h1>
+                    <h1 class="f-shadow">Schedule Optimizer v1.0</h1>
                     <div class="accordion tile">
                         <div class="panel-group block" id="accordion">
                             <div class="panel panel-default">
@@ -489,7 +489,7 @@
                                                     </div>
                                                     <li>Where can I learn how to make something like this?</li>
                                                     <div class="faq-res">
-                                                        Attend a hackathon! There's no better, quicker, or more fun way to develop your skills in a short period of time. If you attend SDSU, I'm a Microsoft Student Partner and we hold tech workshops every other Wednesday with the Association of Computing Machinery (ACM).
+                                                        Attend a hackathon! Otherwise, if you attend SDSU, I'm a Microsoft Student Partner and we hold tech workshops every other Wednesday with the Association of Computing Machinery (ACM).
                                                         Like our page on Facebook to stay updated! <a href="https://www.facebook.com/microsoftSDSU/" target="_blank">https://www.facebook.com/microsoftSDSU/</a>
                                                     </div>
                                                 </ul>
@@ -498,7 +498,7 @@
                                                 <ul class="lists-faq">
                                                     <li>How did this project take shape?</li>
                                                     <div class="faq-res">
-                                                    It began as a small idea at UCSB's annual hackathon and rapidly grew in size over the course of a weekend. We were able to hack functionality for UCSB, SDSU, and UC Berkeley despite their particularly dissimilar registration systems. Excited to make new leaps and strides with this project in the future!
+                                                        It began as a small idea at UCSB's annual hackathon and rapidly grew in size over the course of a weekend. We were able to hack functionality for UCSB, SDSU, and UC Berkeley despite their particularly dissimilar registration systems. Excited to make new leaps and strides with this project in the future!
                                                     </div>
                                                     <li>What kind of data do you log?</li>
                                                     <div class="faq-res">

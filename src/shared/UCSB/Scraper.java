@@ -12,6 +12,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import shared.GeneralScraper;
 
+import javax.servlet.ServletContext;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,7 +61,9 @@ public class Scraper extends GeneralScraper {
 
     protected void parseRegistrationData(String dept, List<String> courseList) throws Exception {
 
-        System.setProperty("webdriver.chrome.driver", "C:/Users/alecazam/IdeaProjects/ScheduleOptimizer/WEB-INF/chromedriver.exe");
+        /** CHANGE FOR LINUX VS WINDOWS */
+        System.setProperty("webdriver.chrome.driver", super.serverPath + "/WEB-INF/chromedriver_server");
+        //System.setProperty("webdriver.chrome.driver", super.serverPath + "/WEB-INF/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
         WebDriver driver = new ChromeDriver(options);
@@ -75,7 +78,7 @@ public class Scraper extends GeneralScraper {
 
         WebElement quarterList = driver.findElement(By.name("ctl00$pageContent$quarterList"));
         Select selectQuarter = new Select(quarterList);
-        selectQuarter.selectByValue("20181");
+        selectQuarter.selectByValue(this.desiredTerm);
 
         WebElement courseLevel = driver.findElement(By.name("ctl00$pageContent$dropDownCourseLevels"));
         Select selectLevel = new Select(courseLevel);
@@ -163,10 +166,11 @@ public class Scraper extends GeneralScraper {
                     if(!firstClassInBundle)
                         newCourse.relatedCourse = relatedCourse;
 
-                    if(!courseMap.containsKey(newCourse.courseID))
-                        courseMap.put(newCourse.courseID, new ArrayList<>());
-                    if(newCourse.isComplete())
+                    if(newCourse.isComplete()) {
+                        if (!courseMap.containsKey(newCourse.courseID))
+                            courseMap.put(newCourse.courseID, new ArrayList<>());
                         courseMap.get(newCourse.courseID).add(newCourse);
+                    }
 
                     newCourse = new Course();
                     newCourse.title = courseBundleTitle;
@@ -285,7 +289,7 @@ public class Scraper extends GeneralScraper {
             }
 
         }
-
+        in.close();
     }
 
     /** Format string of days into usable array */

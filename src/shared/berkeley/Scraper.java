@@ -8,7 +8,7 @@ import shared.GeneralScraper;
 import java.net.*;
 import java.util.*;
 import java.io.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Scraper extends GeneralScraper {
 
@@ -23,11 +23,26 @@ public class Scraper extends GeneralScraper {
         // Context of where we're writing to
         super.out = outWriter;
 
-        // Set to remove duplicate departments ("CS-107", "CS-108", etc.)
-        for(int i = 0; i < schedNum.length; i++) {
-            parseRegistrationData(schedNum[i]);
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        for (int i = 0; i < schedNum.length; i++) {
+            int finalI = i; // effectively final version
+            executor.execute(new Runnable() {
+                @Override
+                public
+                void run() {
+                    // Begin analyzing process
+                    try {
+                        parseRegistrationData(schedNum[finalI]);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
-
+        executor.shutdown();
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {e.printStackTrace();}
     }
 
     @Override
@@ -40,7 +55,16 @@ public class Scraper extends GeneralScraper {
         // Parse HTML
         try {
             // Get course and all associated discussions, labs, etc.
-            JSONObject obj = new JSONObject(readUrl(Registration_URL));
+            long timer2 = System.currentTimeMillis();
+            String jsonString = readUrl(Registration_URL);
+            long t2Time = System.currentTimeMillis() - timer2;
+            float bench2 = t2Time / 1000.0f;
+            System.out.print("readUrl() time: ");
+            System.out.format("%.3f", bench2);
+            System.out.println();
+
+            JSONObject obj = new JSONObject(jsonString);
+
 
             JSONArray nodes = obj.optJSONArray("nodes");
             for(int i = 0 ; i < nodes.length() ; i++) {
@@ -180,8 +204,27 @@ public class Scraper extends GeneralScraper {
     /** Set the period/term to search in the URL */
     @Override
     protected void setTerm(String season, String year) {
-        String spring2018 = "/2182";
-        appendParameter(spring2018);
+        String seasonNumber = "";
+        switch (season) {
+            case "Winter":
+                seasonNumber = "2";
+                break;
+            case "Spring":
+                seasonNumber = "2";
+                break;
+            case "Summer":
+                seasonNumber = "5";
+                break;
+            case "Fall":
+                seasonNumber = "8";
+                break;
+        }
+        String term = "/2" + year.substring(2) + seasonNumber;
+
+        // 2016 summer session 2185
+
+        //String spring2018 = "/2182";
+        appendParameter(term);
     }
 
     /**** --------------------  *****
@@ -189,7 +232,8 @@ public class Scraper extends GeneralScraper {
      ***** --------------------  ****/
 
     /** Get the JSON response String from Berk */
-    private static String readUrl(URL link) throws Exception {
+    private static String readUrl(URL link)  throws Exception {
+        System.out.println(link);
         BufferedReader reader = null;
         long timerStart = System.currentTimeMillis();
         try {
@@ -200,11 +244,13 @@ public class Scraper extends GeneralScraper {
             while ((read = reader.read(chars)) != -1)
                 buffer.append(chars, 0, read);
 
+            /*
             long totalTime = System.currentTimeMillis() - timerStart;
             float benchmark = totalTime / 1000.0f;
             System.out.print("readUrl() time: ");
             System.out.format("%.3f", benchmark);
             System.out.println();
+            */
 
             return buffer.toString();
         } finally {
@@ -212,5 +258,4 @@ public class Scraper extends GeneralScraper {
                 reader.close();
         }
     }
-
 }

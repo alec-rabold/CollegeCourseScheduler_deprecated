@@ -43,9 +43,8 @@ public class Scraper extends GeneralScraper {
         Course temp = new Course();
 
         // Parse HTML
-        try {
+        try(BufferedReader in = new BufferedReader(new InputStreamReader(Registration_URL.openStream()))) {
             String inputLine, value;
-            BufferedReader in = new BufferedReader(new InputStreamReader(Registration_URL.openStream()));
 
             while((inputLine = in.readLine()) != null) {
                 updateCount(inputLine);
@@ -275,7 +274,7 @@ public class Scraper extends GeneralScraper {
         String seasonNumber = "";
         switch (season) {
             case "Winter":
-                seasonNumber = "2"; //TODO: Check this
+                seasonNumber = "2"; //TODO: Check this ---> CHECKS
                 break;
             case "Spring":
                 seasonNumber = "2";
