@@ -5,7 +5,6 @@
 
 <jsp:include page="header.jsp"/>
 
-<!----------- FORM--------------->
 <form id="preferences-form" method="POST" action="${pageContext.request.contextPath}/${collegeName}">
     <div class="block-area">
         <h2 class="form" style="margin-bottom: 0px">Step 2: Enter your classes</h2>
