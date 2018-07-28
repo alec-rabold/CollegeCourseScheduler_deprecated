@@ -1,39 +1,44 @@
-package shared;
+package io.collegeplanner.my.shared;
+
+import lombok.AllArgsConstructor;
+import lombok.experimental.Wither;
 
 import java.net.*;
 import java.text.NumberFormat;
 import java.util.*;
 import java.io.*;
 
+@Wither
+@AllArgsConstructor
 public abstract class GeneralScraper {
-    protected PrintWriter out;
+    private PrintWriter out;
 
-    public String REGISTRATION_SEARCH_PAGE;
-    protected String serverPath;
+    private String REGISTRATION_SEARCH_PAGE;
+    private String serverPath;
 
-    protected UserOptions userOptions = new UserOptions();
+    private UserOptions userOptions = new UserOptions();
 
-    protected Map<Integer, List<Course>> countIndexedCourses = new TreeMap<>();
-    protected List<List<Course>> sizeSortedCourses = new ArrayList<>();
-    protected Set<String> foundAvailableCourses = new HashSet<>();
-    protected List<String> chosenCourses = new ArrayList<>();
-    protected int numChosenCourses = 0;
+    private Map<Integer, List<Course>> countIndexedCourses = new TreeMap<>();
+    private List<List<Course>> sizeSortedCourses = new ArrayList<>();
+    private Set<String> foundAvailableCourses = new HashSet<>();
+    private List<String> chosenCourses = new ArrayList<>();
+    private int numChosenCourses = 0;
 
-    protected List<String> unfoundCourses = new ArrayList<>();
+    private List<String> unfoundCourses = new ArrayList<>();
 
-    protected URL Registration_URL;
-    protected String parameters;
-    protected boolean departmentSet = false;
-    protected String departmentSingle = "";
-    protected int sectionMeetingCounter = 0;
+    private URL Registration_URL;
+    private String parameters;
+    private boolean departmentSet = false;
+    private String departmentSingle = "";
+    private int sectionMeetingCounter = 0;
 
-    protected long numValidSchedules = 0;
-    protected long numPermutations = 0;
+    private long numValidSchedules = 0;
+    private long numPermutations = 0;
 
-    protected long timeStart = System.currentTimeMillis();
-    protected long timeEnd = 0L;
+    private long timeStart = System.currentTimeMillis();
+    private long timeEnd = 0L;
 
-    protected boolean timedOut = false;
+    private boolean timedOut = false;
 
     public class UserOptions {
         /** Professors */
@@ -76,8 +81,8 @@ public abstract class GeneralScraper {
         }
     }
 
-    protected boolean isMobile = false;
-    protected void setMobile(String condition) {
+    private boolean isMobile = false;
+    private void setMobile(String condition) {
         if(condition.equals("true")) isMobile = true;
     }
 
@@ -122,25 +127,25 @@ public abstract class GeneralScraper {
         }
     }
 
-    public abstract void iterateInput(String[] chosenCourses, PrintWriter outWriter) throws Exception;
+    public abstract void iterateInput(String[] chosenCourses) throws Exception;
 
-    protected abstract void parseRegistrationData(String department) throws Exception;
+    private abstract void parseRegistrationData(String department) throws Exception;
 
-    protected abstract int[] convDaysToArray(String days);
+    private abstract int[] convDaysToArray(String days);
 
-    protected abstract void createSizeSortedCourses();
+    private abstract void createSizeSortedCourses();
 
-    protected abstract void appendParameter(String addParam);
+    private abstract void appendParameter(String addParam);
 
-    protected abstract void setTerm(String season, String year);
+    private abstract void setTerm(String season, String year);
 
-    protected abstract void setSearch(String s) throws MalformedURLException;
+    private abstract void setSearch(String s) throws MalformedURLException;
 
-    protected abstract String formatURL(String url);
+    private abstract String formatURL(String url);
 
-    protected abstract int rowspanFormula(int startHour, int startMin, int endHour, int endMin);
+    private abstract int rowspanFormula(int startHour, int startMin, int endHour, int endMin);
 
-    protected String getParameters() {
+    private String getParameters() {
         return this.parameters;
     }
 
@@ -407,7 +412,7 @@ public abstract class GeneralScraper {
     }
 
     /** Print 25 (or less) carousel tables of schedules */
-    protected final void printTables(PriorityQueue<Schedule> validSchedules, boolean wasInterrupted) {
+    private final void printTables(PriorityQueue<Schedule> validSchedules, boolean wasInterrupted) {
         int size = validSchedules.size();
 
         List<List<Course>> correctOrder = new ArrayList<>();
@@ -655,7 +660,7 @@ public abstract class GeneralScraper {
     * Ex: "800-850" --> 1111 (8:45, 8:30, 8:15, 8:00)
     *  "1030-1120" --> 0011 1100 0000 0000 (11:15, 11:00, 10:45, 10:30)
      */
-    protected final static long convertTimesToBits(String timeBlock) {
+    private final static long convertTimesToBits(String timeBlock) {
         String startTime = timeBlock.substring(0, timeBlock.indexOf("-"));
         String endTime = timeBlock.substring(timeBlock.indexOf("-") + 1);
         // 8:00 offset (800 becomes 000) ==> multiplier: 8 --> 0
@@ -684,14 +689,14 @@ public abstract class GeneralScraper {
         return Long.parseLong(bitValue, 2);
     }
 
-    protected String time24to12(int time) {
+    private String time24to12(int time) {
         String s = ((Integer)time).toString();
         int hr = Integer.parseInt((s.length() == 3) ? s.substring(0,1) : s.substring(0,2));
         String min = s.substring(s.length()-2, s.length());
 
         return (((hr<=12) ? hr : hr-12) + ":" + min + " " + ((hr>=12) ? "pm" : "am"));
     }
-    protected String time24to12(String timeframe) {
+    private String time24to12(String timeframe) {
         StringBuilder timeblock = new StringBuilder();
 
         String s = timeframe.substring(0,timeframe.indexOf("-"));
@@ -708,7 +713,7 @@ public abstract class GeneralScraper {
 
         return timeblock.toString();
     }
-    protected int calculateRowspan(Course course, int j) {
+    private int calculateRowspan(Course course, int j) {
         String t = course.times.get(j).substring(0, course.times.get(j).indexOf("-"));
         int startHour = Integer.parseInt((t.length() == 3) ? t.substring(0, 1) : t.substring(0, 2));
         int startMin = Integer.parseInt((t.length() == 3) ? t.substring(1, 3) : t.substring(2, 4));
@@ -722,7 +727,7 @@ public abstract class GeneralScraper {
 
         return rowSpan;
     }
-    protected int getCourseColor(String identifier, Map<String, Integer> courseColors) {
+    private int getCourseColor(String identifier, Map<String, Integer> courseColors) {
         if(courseColors.containsKey(identifier))
             return courseColors.get(identifier);
         else {
@@ -745,19 +750,19 @@ public abstract class GeneralScraper {
         }
     }
 
-    protected String removeIllegalChars(String s) {
+    private String removeIllegalChars(String s) {
         return s.replaceAll("\\s+","").replaceAll("[\\[\\](){}]","");
     }
 
-    protected boolean optionsToCheck() {
+    private boolean optionsToCheck() {
         return (userOptions.wantedProfessors != null || userOptions.unwantedProfessors != null || userOptions.excludeProfessors != null || !userOptions.showWaitlisted || !userOptions.showOnlineClasses);
     }
 
-    protected long getElapsedTime() {
+    private long getElapsedTime() {
         return (timeEnd - timeStart);
     }
 
-    protected int[] incrementIterationVariables(int[] iterationVariables) {
+    private int[] incrementIterationVariables(int[] iterationVariables) {
         Map<Integer, List<Course>> possibleCourses = this.countIndexedCourses;
         int numCourses = this.numChosenCourses;
 
@@ -772,7 +777,7 @@ public abstract class GeneralScraper {
         return iterationVariables;
     }
 
-    protected void checkIfPresent(String query) {
+    private void checkIfPresent(String query) {
         int startIndex = 0, endIndex = 0;
         boolean nextParamFound = false;
         if(this.parameters != null) {
@@ -793,14 +798,14 @@ public abstract class GeneralScraper {
         }
     }
 
-    protected long getNumPerm() {
+    private long getNumPerm() {
         long numPerm = 1;
         for(int i= 0; i < sizeSortedCourses.size(); i++) {
             numPerm = numPerm * sizeSortedCourses.get(i).size();
         }
         return numPerm;
     }
-    protected Set<String> getWaitlistedClasses() {
+    private Set<String> getWaitlistedClasses() {
         Set<String> waitlistedClasses = new TreeSet<>();
 
         for(List<Course> courseList : sizeSortedCourses) {
@@ -811,7 +816,7 @@ public abstract class GeneralScraper {
         }
         return waitlistedClasses;
     }
-    protected Set<String> getUnavailableClasses() {
+    private Set<String> getUnavailableClasses() {
         Set<String> unavailableClasses = new TreeSet<>();
 
         nextCourse:
@@ -827,7 +832,7 @@ public abstract class GeneralScraper {
         return unavailableClasses;
     }
 
-    protected long[] calculateScheduleLayout(List<Course> courses) {
+    private long[] calculateScheduleLayout(List<Course> courses) {
         long[] scheduleLayout = new long[5];
         for(int i = 0; i < courses.size(); i++) {
             for (int multipleDaySlots = 0; multipleDaySlots < courses.get(i).days.size(); multipleDaySlots++) {

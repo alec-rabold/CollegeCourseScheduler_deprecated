@@ -1,9 +1,9 @@
-package shared.berkeley;
+package io.collegeplanner.my.shared.berkeley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import shared.GeneralScraper;
+import io.collegeplanner.my.shared.GeneralScraper;
 
 import java.net.*;
 import java.util.*;
@@ -13,15 +13,13 @@ import java.util.concurrent.*;
 public class Scraper extends GeneralScraper {
 
     public Scraper() {
-        // private
+        super.REGISTRATION_SEARCH_PAGE = "http://classes.berkeley.edu/json-all-sections/";
     }
 
     private Map<String, List<Course>> courseSectionsMap = new HashMap<>();
 
     @Override
-    public void iterateInput(String[] schedNum, PrintWriter outWriter) throws Exception {
-        // Context of where we're writing to
-        super.out = outWriter;
+    public void iterateInput(String[] schedNum) throws Exception {
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
         for (int i = 0; i < schedNum.length; i++) {

@@ -1,4 +1,4 @@
-package shared.berkeley;
+package io.collegeplanner.my.shared.berkeley;
 
 import org.json.JSONObject;
 

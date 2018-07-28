@@ -1,39 +1,35 @@
-package shared.UCSB;
+package io.collegeplanner.my.shared.UCSB;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
-import shared.GeneralScraper;
+import io.collegeplanner.my.shared.GeneralScraper;
 
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.Remote;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static io.collegeplanner.my.Constants.REGISTRATION_SEARCH_PAGE_UCSB;
+
+@Getter
+@Setter
 public class Scraper extends GeneralScraper {
 
-    private Map<String, List<Course>> courseMap = new HashMap<>();
     private String desiredTerm = "20181";
-
+    private Map<String, List<Course>> courseMap = new HashMap<>();
 
     public Scraper() {
-        super.REGISTRATION_SEARCH_PAGE = "http://my.sa.ucsb.edu/Public/curriculum/coursesearch.aspx";
+        super.REGISTRATION_SEARCH_PAGE = REGISTRATION_SEARCH_PAGE_UCSB;
     }
 
     @Override
-    public void iterateInput(String[] chosenCourses, PrintWriter outWriter) throws Exception {
-        // Context of where we're writing to
-        super.out = outWriter;
+    public void iterateInput(String[] chosenCourses) throws Exception {
         super.chosenCourses = Arrays.asList(chosenCourses);
 
         Map<String, List<String>> userDepartments = new HashMap<>();
@@ -337,8 +333,7 @@ public class Scraper extends GeneralScraper {
                 seasonNumber = "4";
                 break;
         }
-        String selectedTerm = year + seasonNumber;
-        this.desiredTerm = selectedTerm;
+        setDesiredTerm(year + seasonNumber);
     }
 
     protected void setSearch(String s) throws MalformedURLException {

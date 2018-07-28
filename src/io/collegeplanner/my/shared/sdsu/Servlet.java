@@ -1,38 +1,37 @@
-package shared.UCSB;
+package io.collegeplanner.my.shared.sdsu;
 
-import shared.GeneralServlet;
+import io.collegeplanner.my.shared.GeneralServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 
-@WebServlet(urlPatterns = {"/UCSB_analyze"})
+@WebServlet(urlPatterns = {"/SDSU_analyze"})
 public class Servlet extends GeneralServlet {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.setScraper(new Scraper());
         super.doGet(request, response);
     }
 
-    @Override
     protected void analyze(String[] classes) {
-
         try {
             custom.iterateInput(classes, out);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(4);
+        // custom.analyzePermutations();
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+
         Future<?> future = executor.submit(new Runnable() {
             @Override
             public void run() {

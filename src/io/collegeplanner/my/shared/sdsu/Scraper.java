@@ -1,6 +1,6 @@
-package shared.sdsu;
+package io.collegeplanner.my.shared.sdsu;
 
-import shared.GeneralScraper;
+import io.collegeplanner.my.shared.GeneralScraper;
 
 import java.net.*;
 import java.util.*;
@@ -15,9 +15,7 @@ public class Scraper extends GeneralScraper {
 
 
     @Override
-    public void iterateInput(String[] chosenCourses, PrintWriter outWriter) throws Exception {
-        // Context of where we're writing to
-        super.out = outWriter;
+    public void iterateInput(String[] chosenCourses) throws Exception {
         super.chosenCourses = Arrays.asList(chosenCourses);
         super.numChosenCourses = chosenCourses.length;
 

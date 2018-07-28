@@ -1,4 +1,4 @@
-package shared;
+package io.collegeplanner.my.shared;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

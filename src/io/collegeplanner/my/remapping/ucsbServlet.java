@@ -1,4 +1,4 @@
-package remapping;
+package io.collegeplanner.my.remapping;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

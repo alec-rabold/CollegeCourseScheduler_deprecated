@@ -1,9 +1,8 @@
-package shared.sdsu;
+package io.collegeplanner.my.shared.sdsu;
 
-import shared.GeneralScraper;
+import io.collegeplanner.my.shared.GeneralScraper;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 

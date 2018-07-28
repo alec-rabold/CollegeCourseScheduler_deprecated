@@ -1,4 +1,4 @@
-package shared.sdsu;
+package io.collegeplanner.my.shared.sdsu;
 
 import java.net.*;
 import java.util.*;
@@ -14,7 +14,7 @@ import java.io.*;
  * subjectTitle is the department's full name (ex. Computer Science)
  *
  * Storing these values in a TreeMap so that they are sorted and iterated
- * alphabetically in shared.GeneralScraper.java, and so that it prints easily
+ * alphabetically in io.collegeplanner.my.shared.GeneralScraper.java, and so that it prints easily
  * to the console to show the user what department abbreviations are
  *
  * @return sorted TreeMap of department abbreviations and full names
@@ -22,7 +22,7 @@ import java.io.*;
 
 public class DepartmentScraper {
 
-    private final String DEPARTMENTS_PAGE = "https://sunspot.shared.sdsu.edu/schedule/search?mode=browse_by_department&category=browse_by_department";
+    private final String DEPARTMENTS_PAGE = "https://sunspot.io.collegeplanner.my.shared.sdsu.edu/schedule/search?mode=browse_by_department&category=browse_by_department";
     private URL Dept_URL;
     private TreeMap<String, String> departmentMap;
 

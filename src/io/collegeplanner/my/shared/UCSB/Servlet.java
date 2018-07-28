@@ -1,17 +1,15 @@
-package shared.berkeley;
+package io.collegeplanner.my.shared.UCSB;
 
-import shared.GeneralServlet;
+import io.collegeplanner.my.shared.GeneralServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 
-@WebServlet(urlPatterns = {"/berkeley_analyze"})
+@WebServlet(urlPatterns = {"/UCSB_analyze"})
 public class Servlet extends GeneralServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,31 +25,12 @@ public class Servlet extends GeneralServlet {
     protected void analyze(String[] classes) {
 
         try {
-            // int numClasses = classes.length;
-
-            List<String> allIDs = new ArrayList<>();
-            for(String classIDs : classes) {
-                int start = 0;
-                int position = classIDs.indexOf(",");
-                while(position != -1) {
-                    String ID = classIDs.substring(start, position);
-                    start = position + 1;
-                    position = classIDs.indexOf(",", start);
-                    allIDs.add(ID);
-                }
-            }
-            // Convert list to array
-            classes = new String[allIDs.size()];
-            classes = allIDs.toArray(classes);
-
             custom.iterateInput(classes, out);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // custom.analyzePermutations();
-
-        ExecutorService executor = Executors.newFixedThreadPool(1);
+        ExecutorService executor = Executors.newFixedThreadPool(4);
         Future<?> future = executor.submit(new Runnable() {
             @Override
             public void run() {
