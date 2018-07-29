@@ -68,7 +68,7 @@ public class Scraper extends GeneralScraper {
                     else continue;
                 }
 
-                /** Schedule number */
+                /** ScheduleDto number */
                 else if(inputLine.contains("sectionFieldSched")) {
                     value = parseSection(inputLine);
                     if(!value.equals("Sched #") && (value.matches(".*\\d+.*") || value.contains("***")))
@@ -254,7 +254,7 @@ public class Scraper extends GeneralScraper {
         return ((((endHour * 60) + endMin) - ((startHour * 60) + startMin)) / 15);
     }
 
-    /** Append parameters to the search URL */
+    /** Append params to the search URL */
     @Override
     protected void appendParameter(String addParam) {
         if(parameters != null)

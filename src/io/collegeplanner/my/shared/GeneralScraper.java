@@ -1,6 +1,8 @@
 package io.collegeplanner.my.shared;
 
-import lombok.AllArgsConstructor;
+import io.collegeplanner.my.models.CourseDto;
+import io.collegeplanner.my.models.UserOptionsDto;
+import lombok.*;
 import lombok.experimental.Wither;
 
 import java.net.*;
@@ -8,18 +10,20 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.io.*;
 
+@Getter
+@Setter
 @Wither
 @AllArgsConstructor
 public abstract class GeneralScraper {
     private PrintWriter out;
 
-    private String REGISTRATION_SEARCH_PAGE;
+    private String registrationSearchPage;
     private String serverPath;
 
-    private UserOptions userOptions = new UserOptions();
+    private UserOptionsDto userOptions;
 
-    private Map<Integer, List<Course>> countIndexedCourses = new TreeMap<>();
-    private List<List<Course>> sizeSortedCourses = new ArrayList<>();
+    private Map<Integer, List<CourseDto>> countIndexedCourses = new TreeMap<>();
+    private List<List<CourseDto>> sizeSortedCourses = new ArrayList<>();
     private Set<String> foundAvailableCourses = new HashSet<>();
     private List<String> chosenCourses = new ArrayList<>();
     private int numChosenCourses = 0;
@@ -40,110 +44,25 @@ public abstract class GeneralScraper {
 
     private boolean timedOut = false;
 
-    public class UserOptions {
-        /** Professors */
-        public String[] wantedProfessors = null;
-        public void setWantedProfessors(String[] professors) {
-            this.wantedProfessors = professors;
-        }
-        public String[] unwantedProfessors = null;
-        public void setUnwantedProfessors(String[] professors) {
-            this.unwantedProfessors = professors;
-        }
-        public String[] excludeProfessors = null;
-        public void setExcludedProfessors(String[] professors) {
-            this.excludeProfessors = professors;
-        }
-        /** Unavailable times */
-        public long[] unavTimesBitBlocks = null;
-        public void setUnavTimesBitBlocks(long[] unavTimes) {
-            this.unavTimesBitBlocks = unavTimes;
-        }
-        /** Show waitlisted classes */
-        public boolean showWaitlisted = true;
-        public void setShowWaitlisted(String bool) {
-            if(bool.equals("false")) this.showWaitlisted = false;
-        }
-        /** Show online (hybrid) classes */
-        public boolean showOnlineClasses = true;
-        public void setShowOnlineClasses(String bool) {
-            if(bool.equals("false")) this.showOnlineClasses = false;
-        }
-        /** Tight vs. relaxed schedule */
-        public int spreadPreference = 1;
-        public void setSpreadPreference(String preference) {
-            if(preference.equals("relaxed")) this.spreadPreference = -1;
-        }
-        /** Shorter classes vs. fewer days */
-        public int numDaysPreference = 1;
-        public void setNumDaysPreference(String preference) {
-            if(preference.equals("more")) this.spreadPreference = -1;
-        }
-    }
-
-    private boolean isMobile = false;
-    private void setMobile(String condition) {
-        if(condition.equals("true")) isMobile = true;
-    }
-
-    public class Course {
-        public String courseID;
-        public String schedNumber;
-        public String title;
-        public  String units;
-        public  String seats;
-        public Course relatedCourse; // So far, only necessary for UCSB (due to poor registration interface)
-        public  List<String> locations = new ArrayList<>();
-        public  List<String> times = new ArrayList<String>();
-        public  List<String> instructors = new ArrayList<String>();
-        public  List<String> days = new ArrayList<String>();
-        public boolean isComplete() {
-            return (courseID != null && schedNumber != null && title != null && units != null &&
-                    seats != null && !times.isEmpty());
-        }
-    }
-
-    public class Schedule implements Comparable<Schedule> {
-        public  List<Course> courses;
-        public  int numGoodProfessors;
-        public  int numBadProfessors;
-        public  int timeTightness;
-        public  int numDays;
-        public  Integer algorithmValue;
-        public long[] layout;
-        public  Schedule(List<Course> courses, int numGoodProf, int numBadProf, int timeTightness, int numDays, long[] layout) {
-            this.courses = courses;
-            this.numGoodProfessors = numGoodProf;
-            this.numBadProfessors = numBadProf;
-            this.timeTightness = timeTightness;
-            this.numDays = numDays;
-            this.layout = layout;
-            this.algorithmValue = (userOptions.spreadPreference * 2 * timeTightness) - 45*numGoodProf + 55*numBadProf + (userOptions.numDaysPreference * (numDays * 30));
-        }
-        @Override
-        public int compareTo(Schedule b) {
-            // return this.algorithmValue.compareTo(b.algorithmValue);
-            return b.algorithmValue.compareTo(this.algorithmValue);
-        }
-    }
+    private boolean isMobileBrowser;
 
     public abstract void iterateInput(String[] chosenCourses) throws Exception;
 
-    private abstract void parseRegistrationData(String department) throws Exception;
+    public abstract void parseRegistrationData(String department) throws Exception;
 
-    private abstract int[] convDaysToArray(String days);
+    public abstract int[] convDaysToArray(String days);
 
-    private abstract void createSizeSortedCourses();
+    public abstract void createSizeSortedCourses();
 
-    private abstract void appendParameter(String addParam);
+    public abstract void appendParameter(String addParam);
 
-    private abstract void setTerm(String season, String year);
+    public abstract void setTerm(String season, String year);
 
-    private abstract void setSearch(String s) throws MalformedURLException;
+    public abstract void setSearch(String s) throws MalformedURLException;
 
-    private abstract String formatURL(String url);
+    public abstract String formatURL(String url);
 
-    private abstract int rowspanFormula(int startHour, int startMin, int endHour, int endMin);
+    public abstract int rowspanFormula(int startHour, int startMin, int endHour, int endMin);
 
     private String getParameters() {
         return this.parameters;
@@ -486,14 +405,14 @@ public abstract class GeneralScraper {
             out.println("<table id='optimized-table'>");
             out.println("<tr>");
             out.println("<th class='opt-table-label opt-table-time'></th>");
-            if(!isMobile) {
+            if(!isMobileBrowser) {
                 out.println("<th class='opt-table-label'>Monday</th>");
                 out.println("<th class='opt-table-label'>Tuesday</th>");
                 out.println("<th class='opt-table-label'>Wednesday</th>");
                 out.println("<th class='opt-table-label'>Thursday</th>");
                 out.println("<th class='opt-table-label'>Friday</th>");
             }
-            else if(isMobile) {
+            else if(isMobileBrowser) {
                 out.println("<th class='opt-table-label'>M</th>");
                 out.println("<th class='opt-table-label'>T</th>");
                 out.println("<th class='opt-table-label'>W</th>");
@@ -577,7 +496,7 @@ public abstract class GeneralScraper {
                                 out.println(">");
                                 out.println("<p id='courseID'><b>" + course.courseID.toUpperCase() + "</b></p>");
                                 out.print("<div ");
-                                    if(isMobile) out.print("style='display:none' ");
+                                    if(isMobileBrowser) out.print("style='display:none' ");
                                     out.println(">");
                                     out.print("<p id='title'><i>");
                                     out.print("<p id='title'><i>");

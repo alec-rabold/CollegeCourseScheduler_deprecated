@@ -12,17 +12,19 @@ import java.util.concurrent.*;
 @WebServlet(urlPatterns = {"/UCSB_analyze"})
 public class Servlet extends GeneralServlet {
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.setScraper(new Scraper());
         super.doGet(request, response);
     }
 
     @Override
-    protected void analyze(String[] classes) {
+    protected void analyzeSchedulePermutations(String[] classes) {
 
         try {
             custom.iterateInput(classes, out);

@@ -1,5 +1,6 @@
 package io.collegeplanner.my.shared.berkeley;
 
+import io.collegeplanner.my.models.CourseDto;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,13 +11,15 @@ import java.util.*;
 import java.io.*;
 import java.util.concurrent.*;
 
-public class Scraper extends GeneralScraper {
+import static io.collegeplanner.my.Constants.REGISTRATION_SEARCH_PAGE_BERKELEY;
 
-    public Scraper() {
-        super.REGISTRATION_SEARCH_PAGE = "http://classes.berkeley.edu/json-all-sections/";
+public class BerkeleyScraper extends GeneralScraper {
+
+    public BerkeleyScraper() {
+        super.setRegistrationSearchPage(REGISTRATION_SEARCH_PAGE_BERKELEY);
     }
 
-    private Map<String, List<Course>> courseSectionsMap = new HashMap<>();
+    private Map<String, List<CourseDto>> courseSectionsMap = new HashMap<>();
 
     @Override
     public void iterateInput(String[] schedNum) throws Exception {
@@ -44,7 +47,7 @@ public class Scraper extends GeneralScraper {
     }
 
     @Override
-    protected void parseRegistrationData(String schedNum) throws Exception {
+    public void parseRegistrationData(String schedNum) throws Exception {
         long timerStart = System.currentTimeMillis();
 
         // Format the URL
@@ -128,7 +131,7 @@ public class Scraper extends GeneralScraper {
             }
             long totalTime = System.currentTimeMillis() - timerStart;
             float benchmark = totalTime / 1000.0f;
-            System.out.print("Schedule #:" + schedNum +", Time: ");
+            System.out.print("ScheduleDto #:" + schedNum +", Time: ");
             System.out.format("%.3f", benchmark);
             System.out.println();
         }
@@ -190,7 +193,7 @@ public class Scraper extends GeneralScraper {
         return ((((endHour * 60) + (endMin + 1)) - ((startHour * 60) + (startMin + 1))) / 15);
     }
 
-    /** Append parameters to the search URL */
+    /** Append params to the search URL */
     @Override
     protected void appendParameter(String addParam) {
         if(parameters != null)

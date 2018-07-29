@@ -12,19 +12,21 @@ import java.util.List;
 import java.util.concurrent.*;
 
 @WebServlet(urlPatterns = {"/berkeley_analyze"})
-public class Servlet extends GeneralServlet {
+public class BerkeleyServlet extends GeneralServlet {
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+        this.doGet(request, response);
     }
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.setScraper(new Scraper());
+        super.setCustomScraper(new BerkeleyScraper());
         super.doGet(request, response);
     }
 
     @Override
-    protected void analyze(String[] classes) {
+    protected void analyzeSchedulePermutations(String[] classes) {
 
         try {
             // int numClasses = classes.length;
@@ -49,7 +51,7 @@ public class Servlet extends GeneralServlet {
             e.printStackTrace();
         }
 
-        // custom.analyzePermutations();
+        // customScraper.analyzePermutations();
 
         ExecutorService executor = Executors.newFixedThreadPool(1);
         Future<?> future = executor.submit(new Runnable() {

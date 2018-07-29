@@ -1,6 +1,8 @@
 package io.collegeplanner.my.shared;
 
+import com.google.common.collect.ImmutableList;
 import io.collegeplanner.my.models.ParametersDto;
+import io.collegeplanner.my.models.UserOptionsDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,150 +14,129 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+
+import static io.collegeplanner.my.Constants.*;
 
 @Getter
 @Setter
 public abstract class GeneralServlet extends HttpServlet {
-    private PrintWriter output;
+    private PrintWriter outputWriter;
     private ParametersDto params;
-    private GeneralScraper custom;
+    private GeneralScraper customScraper;
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected abstract void analyzeSchedulePermutations(String[] classes);
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doGet(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setRequest(request);
-        setResponse(response);
-        setOutput(response.getWriter());
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.request = request;
+        this.response = response;
+        this.outputWriter = response.getWriter();
 
-        setHeaders();
-        setParameters(params);
-        includeHeader();
+        this.setResponseHeaders();
+        this.appendCommonHeaderView();
+        this.setParametersDtoFromRequest();
+        this.buildScraperFromParametersDto();
 
-        analyze(params.getClasses());
+        this.analyzeSchedulePermutations(this.params.getChosenCourses());
 
-        output.flush();
-        includeFooter();
-        recordData(request, params);
+        this.outputWriter.flush();
+        this.appendCommonFooterView();
+        this.pushUsageDataToDatabase(this.request, this.params);
     }
 
-    protected abstract void analyze(String[] classes);
-
-    protected void setScraper(GeneralScraper scraper) {
-        this.custom = scraper;
+    private void pushUsageDataToDatabase(HttpServletRequest request, ParametersDto params) {
+        DatabaseConnection.writeToDatalog(request, customScraper.getElapsedTime(), params.getSuggestion(), params.getProblems(), params.classes, customScraper.getNumPerm(), customScraper.timedOut);
     }
 
-    protected void recordData(HttpServletRequest request, ParametersDto params) {
-        DatabaseConnection.writeToDatalog(request, custom.getElapsedTime(), params.getSuggestion(), params.getProblems(), params.classes, custom.getNumPerm(), custom.timedOut);
+    private void appendCommonHeaderView() throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher(HEADER_FILE_NAME);
+        rd.include(request, response);
     }
 
-    private void includeFooter() {
-        try {
-            RequestDispatcher rd = request.getRequestDispatcher("footer.jsp");
-            rd.include(request, response);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+    private void appendCommonFooterView() throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher(FOOTER_FILE_NAME);
+        rd.include(request, response);
     }
 
-    private void includeHeader() {
-        try {
-            RequestDispatcher rd = request.getRequestDispatcher("header.jsp");
-            rd.include(request, response);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+    private void setResponseHeaders() {
+        this.response.setHeader("Pragma", "No-cache");
+        this.response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        this.response.setContentType("text/html");
+        this.response.setDateHeader("Expires", -1);
     }
 
-    private void setHeaders() {
-        response.setContentType("text/html");
-        response.setHeader("Pragma", "No-cache");
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setDateHeader("Expires", -1);
+    private void setParametersDtoFromRequest() {
+        this.params = ParametersDto.builder()
+                .suggestion(this.request.getParameter("suggestions"))
+                .problems(this.request.getParameter("problems"))
+                .chosenCourses(this.request.getParameterValues("needed-classes"))
+                .wantedProfessors(this.request.getParameterValues("wanted-professors"))
+                .unwantedProfessors(this.request.getParameterValues("unwanted-professors"))
+                .season(this.request.getParameter("season"))
+                .year(this.request.getParameter("year"))
+                .spreadPreference(this.request.getParameter("schedule-breaks"))
+                .isMobile(this.request.getParameter("isMobileBrowser").equals("true"))
+                .excludeProfessors(this.request.getParameterValues("excluded-professors"))
+                .waitlistOption(this.request.getParameter("waitlist-option"))
+                .onlineOption(this.request.getParameter("online-option"))
+                .numDaysOption(this.request.getParameter("numDays-option"))
+                .setOfDays(ImmutableList.of(
+                        request.getParameterValues(MONDAYS_ARRAY),
+                        request.getParameterValues(TUESDAY_ARRAY),
+                        request.getParameterValues(WEDNESDAY_ARRAY),
+                        request.getParameterValues(THURSDAY_ARRAY),
+                        request.getParameterValues(FRIDAY_ARRAY)
+                ))
+                .unavStartTimes(request.getParameterValues(UNAVAILABLE_START_TIMES_ARRAY))
+                .unavEndTimes(request.getParameterValues(UNAVAILABLE_END_TIMES_ARRAY))
+                .build();
+        // TODO: modify this; "constructUnavailableTimesBitsBlock()" needs info from this.params
+        this.params.setUnavTimesBitBlocks(constructUnavailableTimesBitsBlock());
     }
 
-    private ParametersDto retrieveParameters() {
-        setParams(new ParametersDto()
-                .withSuggestion(request.getParameter("suggestions"))
-                .withProblems(request.getParameter("problems"))
-                .withClasses(request.getParameterValues("needed-classes"))
-                .withWantedProfessors(request.getParameterValues("wanted-professors"))
-                .withUnwantedProfessors(request.getParameterValues("unwanted-professors"))
-                .withSeason(request.getParameter("season"))
-                .withYear(request.getParameter("year"))
-                .withSpreadPreference(request.getParameter("schedule-breaks"))
-                .withIsMobile(request.getParameter("isMobile"))
-                .withExcludeProfessors(request.getParameterValues("excluded-professors"))
-                .withWaitlistOption(request.getParameter("waitlist-option"))
-                .withOnlineOption(request.getParameter("online-option"))
-                .withNumDaysOption(request.getParameter("numDays-option"))
-        );
+    private void buildScraperFromParametersDto() {
+        this.customScraper = this.customScraper
+                .withUserOptions(UserOptionsDto.builder()
+                        .wantedProfessors(this.params.getWantedProfessors())
+                        .unwantedProfessors(this.params.getUnwantedProfessors())
+                        .excludeProfessors(this.params.getExcludeProfessors())
+                        .scheduleSpreadPreference(this.params.getSpreadPreference().equals("relaxed") ? -1 : 1)
+                        .showWaitlistedClasses(Boolean.getBoolean(this.params.getWaitlistOption()))
+                        .unavailableTimesBitBlocks(this.params.getUnavTimesBitBlocks())
+                        .daysPerWeekPreference(this.params.getNumDaysOption().equals("more") ? -1 : 1)
+                        .showOnlineClasses(Boolean.getBoolean(this.params.getOnlineOption()))
+                        .build())
+                .withMobileBrowser(this.params.isMobile())
+                .withServerPath(this.getServletContext().getRealPath(File.separator)));
+        this.customScraper.setTerm(this.params.getSeason(), this.params.getYear());
+    }
 
-        // Days
-        List<String[]> setOfDays = new ArrayList<>().;
-        setOfDays.add(request.getParameterValues("mon[]"));
-        setOfDays.add(request.getParameterValues("tues[]"));
-        setOfDays.add(request.getParameterValues("wed[]"));
-        setOfDays.add(request.getParameterValues("thurs[]"));
-        setOfDays.add(request.getParameterValues("fri[]"));
-        params.setSetOfDays(setOfDays);
+    private long[] constructUnavailableTimesBitsBlock() {
+        final long[] unavailableTimesBitBlocks = new long[5];
+        final int numUnavailableTimes = this.params.getSetOfDays().get(1).length;
 
-        // Times
-        params.setUnavStartTimes(request.getParameterValues("unavStart[]"));
-        params.setUnavEndTimes(request.getParameterValues("unavEnd[]"));
-
-        /** Construct unavailable timeblocks */
-        long[] unavTimesBitBlocks = new long[5];
-        try {
-            int num_unavTimes = setOfDays.get(1).length;
-            for (int i = 0; i < num_unavTimes; i++) {
-                for (int j = 0; j < 5; j++) {
-                    String dayOfWeek = setOfDays.get(j)[i];
-                    if (dayOfWeek.equals("1") && (params.getUnavStartTimes()[i].length() > 4) && (params.getUnavEndTimes()[i].length() > 4)) {
-                        String timeblock = params.getUnavStartTimes()[i].substring(0, 5) + "-" + params.getUnavEndTimes()[i].substring(0, 5);
-                        unavTimesBitBlocks[j] = unavTimesBitBlocks[j] | (GeneralScraper.convertTimesToBits(timeblock));
-                    }
+        for (int currentTimeblock = 0; currentTimeblock < numUnavailableTimes; currentTimeblock++) {
+            for (int dayOfWeek = 0; dayOfWeek < NUM_OF_WEEKDAYS; dayOfWeek++) {
+                final String dayOfWeekForCurrentTimeblock = this.params.getSetOfDays().get(dayOfWeek)[currentTimeblock];
+                if (dayOfWeekForCurrentTimeblock.equals(SELECTED_BY_USER)
+                        // TODO: verify whether the below two condition are necessary or were just a test
+                        && (this.params.getUnavStartTimes()[currentTimeblock].length() > 4)
+                        && (this.params.getUnavEndTimes()[currentTimeblock].length() > 4))
+                {
+                    final String timeblock = this.params.getUnavStartTimes()[currentTimeblock].substring(0, 5)
+                            + "-" + this.params.getUnavEndTimes()[currentTimeblock].substring(0, 5);
+                    unavailableTimesBitBlocks[dayOfWeek] =
+                            unavailableTimesBitBlocks[dayOfWeek] | (GeneralScraper.convertTimesToBits(timeblock));
                 }
             }
         }
-        catch (Exception e) {}
-
-        params.setUnavTimesBitBlocks(unavTimesBitBlocks);
-
-        setParams(params);
-        return params;
-    }
-
-    protected void setParameters(ParametersDto params) {
-        custom = this.custom
-
-
-
-        custom.setTerm(params.season, params.year);
-        custom.setMobile(params.isMobile);
-        custom.userOptions.setWantedProfessors(params.wantedProfessors);
-        custom.userOptions.setUnwantedProfessors(params.unwantedProfessors);
-        custom.userOptions.setSpreadPreference(params.spreadPreference);
-        custom.userOptions.setExcludedProfessors(params.excludeProfessors);
-        custom.userOptions.setShowWaitlisted(params.waitlistOption);
-        custom.userOptions.setUnavTimesBitBlocks(params.unavTimesBitBlocks);
-        custom.userOptions.setNumDaysPreference(params.numDaysOption);
-        custom.userOptions.setShowOnlineClasses(params.onlineOption);
-        custom.serverPath = this.getServletContext().getRealPath(File.separator);
-
-    }
-
-    protected void initialize(HttpServletRequest request, HttpServletResponse response, GeneralScraper scraper, PrintWriter out) {
-        this.request = request;
-        this.response = response;
-        this.custom = scraper;
-        this.out = output;
+        return unavailableTimesBitBlocks;
     }
 }

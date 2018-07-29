@@ -12,23 +12,25 @@ import java.util.concurrent.*;
 @WebServlet(urlPatterns = {"/SDSU_analyze"})
 public class Servlet extends GeneralServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.setScraper(new Scraper());
         super.doGet(request, response);
     }
 
-    protected void analyze(String[] classes) {
+    protected void analyzeSchedulePermutations(String[] classes) {
         try {
             custom.iterateInput(classes, out);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // custom.analyzePermutations();
+        // customScraper.analyzePermutations();
 
         ExecutorService executor = Executors.newFixedThreadPool(1);
 
