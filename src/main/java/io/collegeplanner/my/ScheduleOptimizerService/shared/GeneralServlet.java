@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static io.collegeplanner.my.ScheduleOptimizerService.Constants.*;
+
 @Getter
 @Setter
 public abstract class GeneralServlet extends HttpServlet {

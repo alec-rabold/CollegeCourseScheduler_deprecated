@@ -43,7 +43,8 @@ public class Constants {
     public static final String DATABASE_JDBC_CONNECTION_URL = System.getProperty(DATABASE_CONNECTION_STRING_KEY);
 
     /** SQL Queries */
-    public static final String SELECT_ALL_FROM_PLACEHOLDER_TABLE_QUERY = "SELECT * FROM ?";
+    public static final String SELECT_ALL_FROM_TABLENAME_QUERY = "SELECT * FROM ?";
+
 
     /** College names */
     public static final String SAN_DIEGO_STATE_UNIVERSITY = "SDSU";

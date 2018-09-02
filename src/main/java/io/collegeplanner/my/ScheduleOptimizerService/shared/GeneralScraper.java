@@ -1,7 +1,5 @@
 package io.collegeplanner.my.ScheduleOptimizerService.shared;
 
-import io.collegeplanner.my.models.CourseDto;
-import io.collegeplanner.my.models.UserOptionsDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

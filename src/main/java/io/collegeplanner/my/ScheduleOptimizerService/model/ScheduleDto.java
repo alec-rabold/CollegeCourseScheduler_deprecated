@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 public class ScheduleDto implements Comparable<ScheduleDto> {
-    private final List<CourseDto> coursesInSchedule;
+    private final List<CourseSectionDto> coursesInSchedule;
     private final int numGoodProfessors;
     private final int numBadProfessors;
     private final int gapTimeTightness;

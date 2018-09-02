@@ -1,6 +1,6 @@
 package io.collegeplanner.my.ScheduleOptimizerService.shared.berkeley;
 
-import io.collegeplanner.my.ScheduleOptimizerService.model.CourseDto;
+import io.collegeplanner.my.ScheduleOptimizerService.model.CourseSectionDto;
 import io.collegeplanner.my.ScheduleOptimizerService.shared.GeneralScraper;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +24,7 @@ public class BerkeleyScraper extends GeneralScraper {
         super.setRegistrationSearchPage(REGISTRATION_SEARCH_PAGE_BERKELEY);
     }
 
-    private Map<String, List<CourseDto>> courseSectionsMap = new HashMap<>();
+    private Map<String, List<CourseSectionDto>> courseSectionsMap = new HashMap<>();
 
     @Override
     public void iterateInput(String[] schedNum) throws Exception {
@@ -74,7 +74,7 @@ public class BerkeleyScraper extends GeneralScraper {
 
             JSONArray nodes = obj.optJSONArray("nodes");
             for(int i = 0 ; i < nodes.length() ; i++) {
-                CourseDto curCourse = new CourseDto();
+                CourseSectionDto curCourse = new CourseSectionDto();
 
                 JSONObject curNode = nodes.optJSONObject(i).optJSONObject("node");
                 // Remove the backslashes and create JSON object
